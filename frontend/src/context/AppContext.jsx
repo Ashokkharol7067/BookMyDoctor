@@ -14,12 +14,12 @@ const AppContextProvide = (props) => {
     const [doctors, setDoctors] = useState([])     
     const [userData, setUserData] = useState(false)
 
-
     const getDoctorsData = async ()=> {
         try {
             const { data } = await axios.get(backendUrl + '/api/doctor/list')
             if (data.success) {
                 setDoctors(data.doctors)
+                console.log(data.doctors)
             }else {
                 toast.error(error.message)
             }

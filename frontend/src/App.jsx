@@ -11,6 +11,7 @@ import Appointments from './pages/Appointments'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
+import AiDoctor from './pages/AiDoctor'
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path='/my-appointment' element={<MyAppointment/>} />
         <Route path='/my-profile' element={<MyProfile/>} />
         <Route path='/appointment/:docId' element={<Appointments/>} />
+        <Route path="/ai-doctor" element={<AiDoctor />} />
       </Routes>
       <Footer />
     </div>
