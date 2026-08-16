@@ -6,6 +6,10 @@ import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import razorpay from "razorpay";
+import crypto from "crypto";                
+import nodemailer from "nodemailer";
+import sendEmail from "../utils/sendEmail.js";  
+
 
 // API to register user
 const registerUser = async (req, res) => {
@@ -135,6 +139,8 @@ const updateProfile = async (req, res) => {
         }
       );
     }
+
+    // console.log(updatedUser.gender)
 
     res.json({ success: true, message: "profile updated successfully." });
   } catch (error) {
@@ -329,6 +335,129 @@ const verifyRazorpay = async (req, res) => {
   }
 };
 
+// forget password logic
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.json({
+        success: false,
+        message: "Email is required.",
+      });
+    }
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+    await user.save();
+
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+
+    await sendEmail(
+      user.email,
+      "BookMyDoctor - Reset Password",
+      `
+        <h2>Password Reset</h2>
+
+        <p>You requested to reset your BookMyDoctor password.</p>
+
+        <p>
+          Click the link below to reset your password:
+        </p>
+
+        <a href="${resetUrl}">
+          Reset Password
+        </a>
+
+        <p>This link will expire in 15 minutes.</p>
+
+        <p>If you did not request this, you can safely ignore this email.</p>
+      `
+    );
+
+    return res.json({
+      success: true,
+      message: "Password reset link has been sent to your email.",
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Reset
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.json({
+        success: false,
+        message: "Token and password are required.",
+      });
+    }
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const user = await userModel.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "Invalid or expired reset link.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpire = null;
+
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Password reset successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 export {
   registerUser,
   loginUser,
@@ -339,4 +468,6 @@ export {
   calcelAppointment,
   paymentRazorpay,
   verifyRazorpay,
+  forgotPassword,
+  resetPassword 
 };

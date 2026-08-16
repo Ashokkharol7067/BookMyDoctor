@@ -12,12 +12,19 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
 import AiDoctor from './pages/AiDoctor'
+import ScrollToTop from "./components/ScrollToTop";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import DoctorDetails from "./pages/DoctorDetails"
 
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[10%]'>
       <ToastContainer />
       <Navbar />
+
+      <ScrollToTop /> 
+
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/login' element={<Login/>} />
@@ -29,6 +36,9 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile/>} />
         <Route path='/appointment/:docId' element={<Appointments/>} />
         <Route path="/ai-doctor" element={<AiDoctor />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token"element={<ResetPassword />}/>
+        <Route path="/doctor/:docId" element={<DoctorDetails />} />
       </Routes>
       <Footer />
     </div>

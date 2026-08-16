@@ -8,7 +8,17 @@ const userSchema = new mongoose.Schema({
     address: { type: Object, default: {line1: '', line2: ''} },
     gender: {type: String, default: "not selected"},
     dob:    {type: String, default: "not selected"},
-    phone:  {type: String, default: '0000000000'}
+    phone:  {type: String, default: '0000000000'},
+
+    resetPasswordToken: {
+        type: String,
+        default: null,
+      },
+      
+      resetPasswordExpire: {
+        type: Date,
+        default: null,
+      },       
 });
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema)

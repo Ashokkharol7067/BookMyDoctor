@@ -9,10 +9,10 @@ const AddDoctor = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [experience, setExperience] = useState("");
+  const [experience, setExperience] = useState("0 Year");
   const [fees, setFees] = useState("");
   const [about, setAbout] = useState("");
-  const [speciality, setSpeciality] = useState("");
+  const [speciality, setSpeciality] = useState("Add Speciality");
   const [degree, setDegree] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
@@ -53,11 +53,13 @@ const AddDoctor = () => {
         formData,
         { headers: { aToken } },
       );
+
+      console.log(data)
       if (data.success) {
         toast.success(data.message)
         setDocImage(false)
         setName('')
-        setEmail('')
+        setEmail(' ')
         setPassword('')
         setAbout('')
         setAddress1('')

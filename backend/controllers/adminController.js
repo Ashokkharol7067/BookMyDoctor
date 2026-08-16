@@ -11,11 +11,12 @@ import userModel from '../models/userModel.js'
 
 const addDoctor = async (req, res)=>{
     try{
+        
         const { name, email, password, speciality, degree, experience, about, fees, address } = req.body
         const imageFile = req.file
 
         if ( !name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address ) {
-            return res.json( {success: false, message: "Missing Details"} )
+            return res.json( {success: false, message: "Provide complete details."} )
         }
 
         // Validing email formate
@@ -55,6 +56,7 @@ const addDoctor = async (req, res)=>{
         res.json({success: true, message: "Doctor added."})
 
     }catch(error){
+      
         console.log(error)
         res.json({success: false, message: error.message})
     }

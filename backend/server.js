@@ -7,6 +7,7 @@ import adminRouter from './routes/adminRoute.js'
 import doctorRouter from './routes/doctorRoute.js'
 import userRouter from './routes/userRoute.js'
 import aiRouter from "./routes/aiRoute.js";
+import contactRouter from "./routes/contactRoute.js";
 
 // app config
 const app = express()
@@ -26,6 +27,8 @@ app.use('/api/doctor', doctorRouter)
 app.use('/api/user', userRouter)
 
 app.use("/api/ai", aiRouter);
+
+app.use("/api/contact", contactRouter);
 
 
 
