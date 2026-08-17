@@ -11,6 +11,7 @@ const AppContextProvide = (props) => {
     const currencySymbol = "$"
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
+    console.log("Backend URL:", backendUrl)
     const [doctors, setDoctors] = useState([])     
     const [userData, setUserData] = useState(false)
 
@@ -21,7 +22,7 @@ const AppContextProvide = (props) => {
                 setDoctors(data.doctors)
                 console.log(data.doctors)
             }else {
-                toast.error(error.message)
+                toast.error(data.message)
             }
         } catch (error) {
             console.log(error)
@@ -29,7 +30,7 @@ const AppContextProvide = (props) => {
         }
     }
 
-    const loadUserProfileData = async (req, res) => {
+    const loadUserProfileData = async () => {
         try {
             
             const { data } = await axios.get(backendUrl + '/api/user/user-info', {headers: {token}})
@@ -37,7 +38,7 @@ const AppContextProvide = (props) => {
                 setUserData(data.userData)
                 
             }else {
-                toast.error(error.message)
+                toast.error(data.message)
             }
 
         } catch (error) {

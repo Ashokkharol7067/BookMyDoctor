@@ -103,7 +103,10 @@ const Navbar = () => {
             </div>
           ) : (
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => {navigate("/login");
+                console.log("Create Account clicked")}
+              }
+              
               className="hidden md:block bg-primary text-white px-8 py-3 rounded-full font-medium shadow hover:shadow-lg hover:bg-blue-700 transition-all duration-300"
             >
               Create Account

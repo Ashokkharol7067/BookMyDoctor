@@ -8,6 +8,12 @@ import doctorRouter from './routes/doctorRoute.js'
 import userRouter from './routes/userRoute.js'
 import aiRouter from "./routes/aiRoute.js";
 import contactRouter from "./routes/contactRoute.js";
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const publicDir = path.join(__dirname, 'public')
 
 // app config
 const app = express()
@@ -18,6 +24,7 @@ connectCloudinary()
 // middleware
 app.use(express.json())
 app.use(cors())
+app.use(express.static(publicDir))
 
 // api endpoint
 app.use('/api/admin', adminRouter)
@@ -30,11 +37,8 @@ app.use("/api/ai", aiRouter);
 
 app.use("/api/contact", contactRouter);
 
-
-
-
-app.get('/', (req, res)=>{
-    res.send('API is working great.')
+app.get("*name", (_req, res) => {
+    res.sendFile(path.join(publicDir, 'index.html'))
 })
 
 app.listen(port, ()=>{
