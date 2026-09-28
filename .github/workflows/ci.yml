@@ -6,12 +6,31 @@ on:
       - main
 
 jobs:
-  test:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Test GitHub Actions
-        run: echo "GitHub Actions is working!"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Build Admin
+        run: |
+          cd admin
+          npm install
+          npm run build
