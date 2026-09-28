@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken'
 import appointmentModel from '../models/appointmentModel.js'
 import userModel from '../models/userModel.js'
 
-
 // API for adding doctors: 
 
 const addDoctor = async (req, res)=>{
@@ -66,6 +65,7 @@ const addDoctor = async (req, res)=>{
 const loginAdmin = async (req, res) =>{
     try {
         const {email, password} = req.body
+        console.log(password)
 
         // console.log("Received email:", email);
         // console.log("Received password:", password);
@@ -74,14 +74,17 @@ const loginAdmin = async (req, res) =>{
         // console.log("Type check:", typeof process.env.ADMIN_EMAIL, typeof process.env.ADMIN_PASSWORD);
 
         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-            const token = jwt.sign(email+password, process.env.JWT_SECRET)
+            const token = jwt.sign ({email},
+                                   process.env.JWT_SECRET,
+                                   { expiresIn: '10m' }
+                                   )
             res.json({success: true, token})
         }else {
             res.json({success: false, message: "Invalid Credential"})
         }
     } catch (error) {
         console.log(error)
-        res.json({success: false, message: error.message})
+        res.json({success: false, message: error.message+" hey"})
     }
 }
 
@@ -125,6 +128,8 @@ const appointmentCancel = async (req, res) => {
     const { docId, slotDate, slotTime } = appointmentData;
     const docData = await doctorModel.findById(docId);
 
+    console.log(docData.slots_booked)
+
     let slots_booked = docData.slots_booked;
     slots_booked[slotDate] = slots_booked[slotDate].filter(
       (e) => e != slotTime,
@@ -161,4 +166,22 @@ const adminDashboard = async (req, res) => {
     }
 }
 
-export {addDoctor, loginAdmin, allDoctors, appointmentsAdmin, appointmentCancel, adminDashboard}
+// getting all user data:
+const getAllPatients = async (req, res) => {
+  try {
+    const patients = await userModel.find({}).select('-password')
+
+    res.json({
+      success: true,
+      patients
+    })
+  } catch (error) {
+    console.log(error)
+    res.json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+export {addDoctor, loginAdmin, allDoctors, appointmentsAdmin, appointmentCancel, adminDashboard, getAllPatients}

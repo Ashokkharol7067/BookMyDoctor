@@ -32,7 +32,7 @@ import doc13 from './doc13.png'
 import doc14 from './doc14.png'
 import doc15 from './doc15.png'
 import chatgpt from './ChatGPT.png'
-import chatgpt1 from './ChatGPT (2).png'
+import chatgpt1 from './chatgpt03.png'
 
 
 import Dermatologist from './Dermatologist.svg'
